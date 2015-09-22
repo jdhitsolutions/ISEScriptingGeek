@@ -20,14 +20,18 @@ Import-CurrentProject
 
 [cmdletbinding()]
 Param(
-[Parameter(Position=0,Mandatory)]
 [ValidateNotNullorEmpty()]    
-[string]$List
+[string]$List = $currentProjectList
 )
 
-#add the current file path to the list
-$psise.CurrentFile.FullPath | Out-File -FilePath $currentProjectList -Encoding ascii -Append
+#add the current file path to the list if it isn't already there
+If ((Get-Content -path $CurrentProjectList) -notcontains $psise.CurrentFile.FullPath) {
+    $psise.CurrentFile.FullPath | Out-File -FilePath $list -Encoding ascii -Append
+}
+else {
+    write-warning "$($psise.CurrentFile.FullPath) already in $list"
 
+}
 } #Add-CurrentProject
 
 Function Edit-CurrentProject {
