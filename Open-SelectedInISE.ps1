@@ -2,18 +2,21 @@
 
 #open selected file in an ISE Tab.
 
+#modified to trim off any extra spaces and write if warning if file not found
+
 Function Open-SelectedISE {
 [cmdletbinding()]
 Param([string]$Text = $psise.CurrentFile.Editor.SelectedText)
 
-if (Test-path $Text ) {
-    psedit $text
+#trim off any spaces
+$file = $Text.Trim()
+
+if (Test-Path -Path $file ) {
+    psedit $file
 } 
 else {
-  #open a new ISE tab and insert the text
-  $new = $psise.CurrentPowerShellTab.Files.add()
-  $new.editor.InsertText($text)
+  Write-Warning "Can't find $file"  
 }
 
-}
+} #end function
 

@@ -1,4 +1,5 @@
 ﻿#requires -version 4.0
+#requires -module PSDesiredStateConfiguration
 
 Function New-DSCResourceSnippet {
 

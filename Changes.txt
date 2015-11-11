@@ -1,0 +1,10 @@
+ChangeLog for ISEScriptingGeek Module
+
+v3.3.0.0
+Added New-FileHere command
+Fixed Open-SelectedISE to trim spaces from selected text and write a warning if file not found.
+Added ChangeLog.txt file.
+Added #requires -module PSDesiredStateConfiguration to New-DSCResourceSnippet.ps1
+Switched to MIT license
+
+
