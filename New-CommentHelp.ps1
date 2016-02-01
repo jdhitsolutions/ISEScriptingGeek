@@ -36,7 +36,7 @@ $help = $comment -f $synopsis,$description
 
 #test if command is loaded and if so get parameters
 #ignore common: 
-$common = "VERBOSE|DEBUG|ERRORACTION|WARNINGACTION|ERRORVARIABLE|WARNINGVARIABLE|OUTVARIABLE|OUTBUFFER|PIPELINEVARIABLE|WHATIF|CONFIRM"
+$common = "VERBOSE|DEBUG|ERRORACTION|WARNINGACTION|ERRORVARIABLE|WARNINGVARIABLE|OUTVARIABLE|OUTBUFFER|PIPELINEVARIABLE|WHATIF|CONFIRM|INFORMATIONVARIABLE|INFORMATIONACTION"
 Try {
     $command = Get-Command -Name $name -ErrorAction Stop
     $params = $command.parameters.keys | where {$_ -notmatch $common} 
@@ -66,6 +66,7 @@ Catch {
 }
 
 #get parameters from help or prompt for comma separated list
+if ($params) {
  Foreach ($param in $params) {
    #get aliases from the command
    $aliases =    $command.parameters[$param].aliases
@@ -89,6 +90,7 @@ $paramDesc
     #append the parameter to the help comment
     $help+=$paramHelp
     } #foreach param
+} #if $params
     
 #Define a default example using the command name
 #this must be left justified to avoid a parsing error    
