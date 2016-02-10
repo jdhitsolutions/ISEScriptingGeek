@@ -7,4 +7,7 @@ Added ChangeLog.txt file.
 Added #requires -module PSDesiredStateConfiguration to New-DSCResourceSnippet.ps1
 Switched to MIT license
 
+v3.3.1.0
+Fixed a bug with New-CommentHelp to accept no parameters
+Updated New-CommentHelp to ignore new Information related common parameters in v5
 
