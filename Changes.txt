@@ -11,3 +11,8 @@ v3.3.1.0
 Fixed a bug with New-CommentHelp to accept no parameters
 Updated New-CommentHelp to ignore new Information related common parameters in v5
 
+v3.3.1.1
+Updated New-FileHere function
+
+v3.3.1.2
+Published to PowerShell Gallery with a v5 manifest.
