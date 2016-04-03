@@ -8,7 +8,7 @@ Param()
 Set-StrictMode -Version Latest
 
 #get the certificate
-$cert = Get-ChildItem -Path cert:\currentuser\my -CodeSigningCert
+$cert = Get-ChildItem -Path cert:\currentuser\my -CodeSigningCert | Sort-Object NotAfter -Descending | Select-Object -First 1
 if ($cert) {
 
     #save the file if necessary
