@@ -16,3 +16,8 @@ Updated New-FileHere function
 
 v3.3.1.2
 Published to PowerShell Gallery with a v5 manifest.
+
+v3.3.1.3
+updated module manifest
+Updated script signing to support multiple certificates
+Updated author name in manifest
