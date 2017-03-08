@@ -7,8 +7,8 @@ Param()
 
 Set-StrictMode -Version Latest
 
-#get the certificate
-$cert = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert
+#get the code signing certificates that have not expired
+$cert = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert | Where-Object {$_.Verify()}
 If ($cert.Count -eq '0') {
     Write-Warning 'No code signing certificate found.'
     Exit
