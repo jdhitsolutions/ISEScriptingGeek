@@ -1,35 +1,45 @@
 # ISEScriptingGeek Module
 
-This module is a set of ISE add-ons and a few themes.
-It requires PowerShell 4.0 or higher.
+This module is a set of ISE add-ons and a few themes. It requires PowerShell 4.0 or higher.
 
-### Themes
+_As of February 2019 I no longer intend to update or extend this module. VS Code is clearly Microsoft's choice for a scripting tool going forward. The PowerShell ISE isn't going away any time soon, but it is also no longer under active development so I need no point in continuing to develop this module. I will maintain it and address pull requests should members of the community wish to contribute, maintain or extend this module._
+
+## Themes
+
 The themes can be found and imported from the Themes subfolder of the module.
 These are optional and are not connected to the add-ons.
 
-### Add-ons
+## Add-ons
+
 Once the module is imported, the add-ons will be listed under **ISE Scripting Geek** on the **Add-ons** menu in the ISE.
 A number of the add-ons fall into grouped subfolders:
 
-#### Bookmarks
+### Bookmarks
+
 A set of functions for creating and working with "bookmarks" to files opened in the ISE.
 
-#### Convert
+### Convert
+
 These handle various conversions such as:
+
 - selected text to snippet, region
 - case conversion
 - alias expansion
 
-#### Dates and times
+### Dates and times
+
 A set of functions for inserting date/time in different formats
 
-#### Files
+### Files
+
 A set of functions for working with open files and their associated folders
 
-#### Work
+### Work
+
 A set of functions for creating and managing a "work list" of files
 
-#### Misc
+### Misc
+
 There are also other scripts directly off the **ISE Scripting Geek** menu, these functions provide various capabilities:
 - Print, Run or Sign script
 - Send script to Word (with or without color)
@@ -37,6 +47,6 @@ There are also other scripts directly off the **ISE Scripting Geek** menu, these
 - Help functions
 - New CIM Command, DSC Resource snippets, etc.
 
-Please submit issues for defects, enhancements, or documentation. 
-	
+Please submit issues for defects, enhancements, or documentation.
 
+*Last updated 21 February 2019*
