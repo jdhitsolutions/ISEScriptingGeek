@@ -4,7 +4,7 @@
 #This works best in the ISE with your function already loaded.
 
 Function New-CommentHelp {
-
+    [cmdletbinding()]
     Param(
         [Parameter(Position = 0, Mandatory, HelpMessage = "What is the name of your function or command?" )]
         [ValidateNotNullorEmpty()]
@@ -39,7 +39,7 @@ Function New-CommentHelp {
     $common = "VERBOSE|DEBUG|ERRORACTION|WARNINGACTION|ERRORVARIABLE|WARNINGVARIABLE|OUTVARIABLE|OUTBUFFER|PIPELINEVARIABLE|WHATIF|CONFIRM|INFORMATIONVARIABLE|INFORMATIONACTION"
     Try {
         $command = Get-Command -Name $name -ErrorAction Stop
-        $params = $command.parameters.keys | where {$_ -notmatch $common}
+        $params = $command.parameters.keys | Where-Object {$_ -notmatch $common}
     }
     Catch {
         #otherwise prompt
@@ -47,7 +47,7 @@ Function New-CommentHelp {
         if ($scriptname) {
             Try {
                 $command = Get-Command -Name $scriptname -ErrorAction Stop
-                $params = $command.parameters.keys | where {$_ -notmatch $common}
+                $params = $command.parameters.keys | Where-Object {$_ -notmatch $common}
             }
             Catch {
                 Write-Warning "Failed to find $scriptname"
@@ -69,7 +69,7 @@ Function New-CommentHelp {
             #get aliases from the command
             $aliases = $command.parameters[$param].aliases
             #get parameter attribute
-            $pa = $command.parameters[$param].Attributes  | where {$_.GetType().name -eq "ParameterAttribute"}
+            $pa = $command.parameters[$param].Attributes  | Where-Object {$_.GetType().name -eq "ParameterAttribute"}
             #extract any parameter help messages
             if ($pa.HelpMessage) {
                 [string]$paramDesc = $pa.HelpMessage

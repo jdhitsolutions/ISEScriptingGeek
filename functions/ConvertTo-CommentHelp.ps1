@@ -1,7 +1,7 @@
 ﻿
 
 Function ConvertTo-CommentHelp {
-
+    [cmdletbinding()]
     Param()
 
     Add-Type -AssemblyName "microsoft.visualbasic" -ErrorAction Stop

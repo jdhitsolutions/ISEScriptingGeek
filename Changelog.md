@@ -1,5 +1,11 @@
 # ChangeLog for ISEScriptingGeek Module
 
+## v3.4.1
+
++ Replaced `Out-Null` references to using `[void]`
++ Cleaned up incorrect exported aliases
++ Code clean up and reformatting
+
 ## v3.4.0
 
 + code cleanup as some commands have moved to the PSScriptTools module.

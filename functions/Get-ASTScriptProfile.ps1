@@ -44,7 +44,7 @@ Function Get-ASTProfile {
     if ($ast.ParamBlock.Parameters ) {
         write-verbose "Parameters detected"
         $foundParams = $(($ast.ParamBlock.Parameters |
-                    Select Name, DefaultValue, StaticType, Attributes |
+                    Select-Object Name, DefaultValue, StaticType, Attributes |
                     Format-List | Out-String).Trim()
         )
     }
@@ -76,10 +76,10 @@ $foundparams
     $unresolved = @()
 
     $genericCommands = $astTokens |
-        where {$_.tokenflags -eq 'commandname' -AND $_.kind -eq 'generic'}
+        Where-Object {$_.tokenflags -eq 'commandname' -AND $_.kind -eq 'generic'}
 
     $aliases = $astTokens |
-        where {$_.tokenflags -eq 'commandname' -AND $_.kind -eq 'identifier'}
+        Where-Object {$_.tokenflags -eq 'commandname' -AND $_.kind -eq 'identifier'}
 
     Write-Verbose "Parsing commands"
     foreach ($command in $genericCommands) {
@@ -94,7 +94,7 @@ $foundparams
     foreach ($command in $aliases) {
         Try {
             $commands += Get-Command -Name $command.text -erroraction Stop |
-                foreach {
+                ForEach-Object {
                 #get the resolved command
                 Get-Command -Name $_.Definition
             }
@@ -116,7 +116,7 @@ $(($Commands | Sort -Unique | Format-Table -autosize | Out-String).Trim())
 
     Write-Verbose "Unresolved commands"
     if ($unresolved) {
-        $unresolvedText = $Unresolved | Sort -Unique | Format-Table -autosize | Out-String
+        $unresolvedText = $Unresolved | Sort-Object -Unique | Format-Table -autosize | Out-String
     }
     else {
         $unresolvedText = "-->None detected"
@@ -136,7 +136,7 @@ $unresolvedtext
     "Disable", "Deny", "Unpublish", "Dismount", "Reset", "Resize",
     "Rename", "Redo", "Lock", "Hide", "Clear"
 
-    $danger = $commands | where {$danger -contains $_.verb} | Sort Name | Get-Unique
+    $danger = $commands | Where-Object {$danger -contains $_.verb} | Sort-Object Name | Get-Unique
 
     if ($danger) {
         $dangercommands = $($danger | Format-Table -AutoSize | Out-String).Trim()
@@ -148,11 +148,11 @@ $unresolvedtext
     #get type names, some of which may come from parameters
     Write-Verbose "Typenames"
 
-    $typetokens = $asttokens | where {$_.tokenflags -eq 'TypeName'}
+    $typetokens = $asttokens | Where-Object {$_.tokenflags -eq 'TypeName'}
     if ($typetokens ) {
         $foundTypes = $typetokens |
-            Sort @{expression = {$_.text.toupper()}} -unique |
-            Select -ExpandProperty Text | foreach { "[$_]"} | Out-String
+            Sort-Object @{expression = {$_.text.toupper()}} -unique |
+            Select-Object -ExpandProperty Text | ForEach-Object { "[$_]"} | Out-String
     }
     else {
         $foundTypes = "-->None detected"

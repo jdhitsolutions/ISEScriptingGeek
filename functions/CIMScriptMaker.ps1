@@ -25,15 +25,15 @@ Function New-CIMCommand {
 
     #browse namespaces
     Write-Host "Enumerating namspaces on $computername....please wait..." -ForegroundColor Cyan
-    $ns = Get-Namespace -CimSession $cimsess | Sort |
+    $ns = Get-Namespace -CimSession $cimsess | Sort-Object |
         Out-GridView -Title "$($cimsess.Computername): Select a namespace" -OutputMode Single
 
     if ($ns) {
         #get classes filtering out system classes
         Write-Host "Enumerating classes...please wait..." -ForegroundColor Cyan
         $class = $cimsess | Get-CimClass -Namespace $ns |
-            Where {$_.cimclassname -notmatch "^__" -AND $_.CimClassProperties.Name -notcontains "Antecedent"} |
-            Sort CimClassName | Select CimClassName, CimClassProperties |
+            Where-Object {$_.cimclassname -notmatch "^__" -AND $_.CimClassProperties.Name -notcontains "Antecedent"} |
+            Sort-Object CimClassName | Select-Object CimClassName, CimClassProperties |
             Out-GridView -Title "$NS : Select a class name" -OutputMode Single
     }
 
@@ -69,7 +69,7 @@ Function New-CIMCommand {
         $cmd = "Get-CimInstance @cimParam"
 
         #create a filter
-        $filterProperty = $class.CimClassProperties | Select Name, CimType, Flags |
+        $filterProperty = $class.CimClassProperties | Select-Object Name, CimType, Flags |
             Out-GridView -Title "Select a property to filter on or cancel to not filter." -OutputMode Single
 
         if ($filterProperty) {
@@ -89,7 +89,7 @@ Function New-CIMCommand {
 
         #show properties
         Write-Host "Getting class properties" -ForegroundColor Cyan
-        $properties = $class.CimClassProperties | select Name, CimType, Flags |
+        $properties = $class.CimClassProperties | Select-Object Name, CimType, Flags |
             Out-Gridview -Title "$($class.CimClassName) : Select one or more properties. Cancel will select *" -PassThru
 
         if ($properties) {

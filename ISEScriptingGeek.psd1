@@ -5,7 +5,7 @@
 RootModule = 'ISEScriptingGeek.psm1'
 
 # Version number of this module.
-ModuleVersion = '3.4.0'
+ModuleVersion = '3.4.1'
 
 # ID used to uniquely identify this module
 GUID = '6d1078ea-36c8-443a-9476-6d6c4d6ac834'
@@ -82,7 +82,7 @@ CmdletsToExport = @()
 VariablesToExport = 'MySnippets', 'MyModules', 'MyPowerShell', 'CurrentProjectList'
 
 # Aliases to export from this module
-AliasesToExport = 'ccs','gcfg','gcfgs','gcmd','glcm','pbcfg','rtcfg','sacfg','slcm','tab','tcfg','upcfg','sd'
+AliasesToExport = 'ccs','gcmd','glcm''tab','sd'
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()

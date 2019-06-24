@@ -9,7 +9,7 @@ Function CloseAllFiles {
     $saved = $psISE.CurrentPowerShellTab.Files.Where( {$_.isSaved})
     foreach ($file in $saved) {
         write-Verbose "closing $($file.FullPath)"
-        $psISE.CurrentPowerShellTab.files.Remove($file) | out-null
+        [void]$psISE.CurrentPowerShellTab.files.Remove($file)
     }
 
 } #end function
@@ -22,7 +22,7 @@ Function CloseAllFilesButCurrent {
     $saved = $psISE.CurrentPowerShellTab.Files.Where( {$_.isSaved -AND $_.fullpath -ne $psISE.CurrentFile.FullPath })
     foreach ($file in $saved) {
         write-Verbose "closing $($file.FullPath)"
-        $psISE.CurrentPowerShellTab.files.Remove($file) | out-null
+        [void]$psISE.CurrentPowerShellTab.files.Remove($file) 
     }
 
 } #end function

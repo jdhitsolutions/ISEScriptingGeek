@@ -73,7 +73,7 @@ $cmdname
 
         Write-Verbose "Cleaning up parameter names"
         [regex]$rx = "[\s+]\$\{\w+\}[,|)]"
-        $metadata = $metadata.split("`n") | foreach {
+        $metadata = $metadata.split("`n") | ForEach-Object {
             If ($rx.ismatch($_)) {
                 #strip off { } around parameter names
                 $rx.Match($_).Value.Replace("{", "").Replace("}", "")
