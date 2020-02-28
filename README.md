@@ -2,7 +2,7 @@
 
 [![PSGallery Version](https://img.shields.io/powershellgallery/v/ISEScriptingGeek.png?style=for-the-badge&logo=powershell&label=PowerShell%20Gallery)](https://www.powershellgallery.com/packages/ISEScriptingGeek/) [![PSGallery Downloads](https://img.shields.io/powershellgallery/dt/ISEScriptingGeek.png?style=for-the-badge&label=Downloads)](https://www.powershellgallery.com/packages/ISEScriptingGeek/)
 
-This module is a set of ISE add-ons and a few themes. It requires PowerShell 4.0 or higher.
+This module is a set of ISE add-ons and a few themes. It requires PowerShell5.1 or higher.
 
 _As of February 2019 I no longer intend to update or extend this module. VS Code is clearly Microsoft's choice for a scripting tool going forward. The PowerShell ISE isn't going away any time soon, but it is also no longer under active development so I need no point in continuing to develop this module. I will maintain it and address pull requests should members of the community wish to contribute, maintain or extend this module._
 
@@ -50,6 +50,4 @@ There are also other scripts directly off the **ISE Scripting Geek** menu, these
 - Help functions
 - New CIM Command, DSC Resource snippets, etc.
 
-Please submit issues for defects, enhancements, or documentation.
-
-*Last 2019-06-24 14:25:59Z UTC*
+Last Update *2020-02-28 00:09:16Z UTC*

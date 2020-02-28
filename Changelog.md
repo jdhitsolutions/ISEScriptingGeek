@@ -1,5 +1,10 @@
 # ChangeLog for ISEScriptingGeek Module
 
+## v3.4.2
+
++ Updated license
++ Updated manifest to PowerShell 5.1 and supporting Desktop edition
+
 ## v3.4.1
 
 + Replaced `Out-Null` references to using `[void]`

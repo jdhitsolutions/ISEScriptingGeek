@@ -5,7 +5,10 @@
 RootModule = 'ISEScriptingGeek.psm1'
 
 # Version number of this module.
-ModuleVersion = '3.4.1'
+ModuleVersion = '3.4.2'
+
+# Supported PSEditions
+CompatiblePSEditions = @('Desktop')
 
 # ID used to uniquely identify this module
 GUID = '6d1078ea-36c8-443a-9476-6d6c4d6ac834'
@@ -17,13 +20,13 @@ Author = 'Jeff Hicks'
 CompanyName = 'JDH Information Technology Solutions, Inc.'
 
 # Copyright statement for this module
-Copyright = '2013-2019 JDH Information Technology Solutions, Inc. All Rights Reserved.'
+Copyright = '2013-2020 JDH Information Technology Solutions, Inc. All Rights Reserved.'
 
 # Description of the functionality provided by this module
 Description = 'Functions and add-ons for the Windows PowerShell ISE v4.0 and later'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '4.0'
+PowerShellVersion = '5.1'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
