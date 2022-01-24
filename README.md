@@ -30,6 +30,8 @@ These are optional and are not connected to the add-ons.
 Once the module is imported, the add-ons will be listed under **ISE Scripting Geek** on the **Add-ons** menu in the ISE.
 A number of the add-ons fall into grouped sub-folders:
 
+![add-ons menu](images/addons-menu.png)
+
 ### Bookmarks
 
 A set of functions for creating and working with "bookmarks" to files opened in the ISE.
@@ -64,4 +66,3 @@ There are also other scripts directly off the **ISE Scripting Geek** menu, these
 - Help functions
 - New CIM Command, DSC Resource snippets, etc.
 
-Last Update *2020-02-28 00:09:16Z UTC*
