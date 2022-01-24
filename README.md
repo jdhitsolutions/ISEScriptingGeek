@@ -6,6 +6,20 @@ This module is a set of ISE add-ons and a few themes. It requires PowerShell5.1 
 
 _As of February 2019 I no longer intend to update or extend this module. VS Code is clearly Microsoft's choice for a scripting tool going forward. The PowerShell ISE isn't going away any time soon, but it is also no longer under active development so I need no point in continuing to develop this module. I will maintain it and address pull requests should members of the community wish to contribute, maintain or extend this module._
 
+Install the module from the PowerShell Gallery.
+
+```powershell
+Install-Module ISScriptingGeek
+```
+
+Then in your PowerShell_ISE profile script, import the module.
+
+```powershell
+Import-Module ISEScriptingGeek
+```
+
+This will add the menu short cuts.
+
 ## Themes
 
 The themes can be found and imported from the Themes sub-folder of the module.
