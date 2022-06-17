@@ -9,7 +9,7 @@ _As of February 2019 I no longer intend to update or extend this module. VS Code
 Install the module from the PowerShell Gallery.
 
 ```powershell
-Install-Module ISScriptingGeek
+Install-Module ISEScriptingGeek
 ```
 
 Then in your PowerShell_ISE profile script, import the module.
