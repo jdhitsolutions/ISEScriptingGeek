@@ -1,19 +1,17 @@
-﻿
-
 Function ConvertTo-CommentHelp {
-    [cmdletbinding()]
+    [CmdletBinding()]
     Param()
 
-    Add-Type -AssemblyName "microsoft.visualbasic" -ErrorAction Stop
-    $Prompt = "Enter the name of a cmdlet. Leave blank to cancel"
-    $Default = ""
+    Add-Type -AssemblyName 'Microsoft.VisualBasic' -ErrorAction Stop
+    $Prompt = 'Enter the name of a cmdlet. Leave blank to cancel'
+    $Default = ''
     $Title = $MyInvocation.MyCommand.Name
-    [string]$command = [microsoft.visualbasic.interaction]::InputBox($Prompt, $Title, $Default)
+    [String]$command = [Microsoft.VisualBasic.interaction]::InputBox($Prompt, $Title, $Default)
 
     if ($command) {
         Try {
 
-            $help = get-help -Name $command -full -errorAction Stop
+            $help = Get-Help -Name $command -Full -ErrorAction Stop
         }
         Catch {
             Throw $_
@@ -38,20 +36,20 @@ $(foreach ($param in $help.parameters.parameter) {
 "`n"
 })
 .Inputs
-$(($help.inputTypes | out-string).trim())
+$(($help.inputTypes | Out-String).trim())
 .Outputs
-$(($help.returnValues | out-string).trim())
+$(($help.returnValues | Out-String).trim())
 .Notes
-$($help.alertSet.alert | foreach {"$($_.text)`n"})
+$($help.alertSet.alert | ForEach-Object {"$($_.text)`n"})
 $(foreach ($item in $help.examples.example) {
 ".Example`n"
  $($item.code)
  "`n"
- $(($item.remarks| out-string).trimEnd())
+ $(($item.remarks| Out-String).trimEnd())
  "`n"
 })
 .Link
-$(($help.relatedLinks | out-string).Trim())
+$(($help.relatedLinks | Out-String).Trim())
 #>
 "@
 

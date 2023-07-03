@@ -1,30 +1,27 @@
 
-
 Function Get-ASTProfile {
-
-    [cmdletbinding()]
+    [CmdletBinding()]
     Param(
         [Parameter(Position = 0, HelpMessage = "Enter the path of a PowerShell script")]
         [ValidateScript( {Test-Path $_})]
         [ValidatePattern( "\.(ps1|psm1|txt)$")]
-        [string]$Path = $(Read-Host "Enter the filename and path to a PowerShell script"),
+        [String]$Path = $(Read-Host "Enter the filename and path to a PowerShell script"),
         [ValidateScript( {Test-Path $_})]
         [Alias("fp", "out")]
-        [string]$FilePath = "$env:userprofile\Documents\WindowsPowerShell"
+        [String]$FilePath = "$env:userprofile\Documents\WindowsPowerShell"
     )
 
-    Write-Verbose "Starting $($myinvocation.MyCommand)"
+    Write-Verbose "Starting $($MyInvocation.MyCommand)"
 
     #region setup profiling
     #need to resolve full path and convert it
     $Path = (Resolve-Path -Path $Path).Path | Convert-Path
     Write-Verbose "Analyzing $Path"
-
     Write-Verbose "Parsing File for AST"
-    New-Variable astTokens -force
+    New-Variable $AstTokens -force
     New-Variable astErr -force
 
-    $AST = [System.Management.Automation.Language.Parser]::ParseFile($Path, [ref]$astTokens, [ref]$astErr)
+    $AST = [System.Management.Automation.Language.Parser]::ParseFile($Path, [ref]$AstTokens, [ref]$astErr)
 
     #endregion
 
@@ -32,24 +29,24 @@ Function Get-ASTProfile {
 
     #include PowerShell version information
     Write-Verbose "PSVersionTable"
-    Write-Verbose ($PSversionTable | Out-String)
+    Write-Verbose ($PSVersionTable | Out-String)
 
-    if ($ast.ScriptRequirements) {
-        $requirements = ($ast.ScriptRequirements | Out-String).Trim()
+    if ($AST.ScriptRequirements) {
+        $requirements = ($AST.ScriptRequirements | Out-String).Trim()
     }
     else {
         $requirements = "-->None detected"
     }
 
-    if ($ast.ParamBlock.Parameters ) {
-        write-verbose "Parameters detected"
-        $foundParams = $(($ast.ParamBlock.Parameters |
+    if ($AST.ParamBlock.Parameters ) {
+        Write-Verbose "Parameters detected"
+        $FoundParams = $(($AST.ParamBlock.Parameters |
                     Select-Object Name, DefaultValue, StaticType, Attributes |
                     Format-List | Out-String).Trim()
         )
     }
     else {
-        $foundParams = "-->None detected. Parameters for nested commands not tested."
+        $FoundParams = "-->None detected. Parameters for nested commands not tested."
     }
 
 
@@ -66,7 +63,7 @@ REQUIREMENTS
 $requirements
 
 PARAMETERS
-$foundparams
+$FoundParams
 
 "@
 
@@ -75,11 +72,11 @@ $foundparams
     $commands = @()
     $unresolved = @()
 
-    $genericCommands = $astTokens |
-        Where-Object {$_.tokenflags -eq 'commandname' -AND $_.kind -eq 'generic'}
+    $genericCommands = $AstTokens |
+        Where-Object {$_.TokenFlags -eq 'commandname' -AND $_.kind -eq 'generic'}
 
-    $aliases = $astTokens |
-        Where-Object {$_.tokenflags -eq 'commandname' -AND $_.kind -eq 'identifier'}
+    $aliases = $AstTokens |
+        Where-Object {$_.TokenFlags -eq 'commandname' -AND $_.kind -eq 'identifier'}
 
     Write-Verbose "Parsing commands"
     foreach ($command in $genericCommands) {
@@ -93,7 +90,7 @@ $foundparams
 
     foreach ($command in $aliases) {
         Try {
-            $commands += Get-Command -Name $command.text -erroraction Stop |
+            $commands += Get-Command -Name $command.text -ErrorAction Stop |
                 ForEach-Object {
                 #get the resolved command
                 Get-Command -Name $_.Definition
@@ -110,16 +107,16 @@ $foundparams
 ALL COMMANDS
 All possible PowerShell commands. This list may not be complete or even correct.
 
-$(($Commands | Sort -Unique | Format-Table -autosize | Out-String).Trim())
+$(($Commands | Sort-Object -Unique | Format-Table -AutoSize | Out-String).Trim())
 
 "@
 
     Write-Verbose "Unresolved commands"
     if ($unresolved) {
-        $unresolvedText = $Unresolved | Sort-Object -Unique | Format-Table -autosize | Out-String
+        $UnresolvedText = $Unresolved | Sort-Object -Unique | Format-Table -AutoSize | Out-String
     }
     else {
-        $unresolvedText = "-->None detected"
+        $UnresolvedText = "-->None detected"
     }
 
     $report += @"
@@ -127,7 +124,7 @@ $(($Commands | Sort -Unique | Format-Table -autosize | Out-String).Trim())
 UNRESOLVED
 These commands may be called from nested commands or unknown modules.
 
-$unresolvedtext
+$UnresolvedText
 "@
 
     Write-Verbose "Potentially dangerous commands"
@@ -139,19 +136,19 @@ $unresolvedtext
     $danger = $commands | Where-Object {$danger -contains $_.verb} | Sort-Object Name | Get-Unique
 
     if ($danger) {
-        $dangercommands = $($danger | Format-Table -AutoSize | Out-String).Trim()
+        $DangerCommands = $($danger | Format-Table -AutoSize | Out-String).Trim()
     }
     else {
-        $dangercommands = "-->None detected"
+        $DangerCommands = "-->None detected"
     }
 
     #get type names, some of which may come from parameters
-    Write-Verbose "Typenames"
+    Write-Verbose "TypeNames"
 
-    $typetokens = $asttokens | Where-Object {$_.tokenflags -eq 'TypeName'}
-    if ($typetokens ) {
-        $foundTypes = $typetokens |
-            Sort-Object @{expression = {$_.text.toupper()}} -unique |
+    $TypeTokens = $AstTokens | Where-Object {$_.TokenFlags -eq 'TypeName'}
+    if ($TypeTokens ) {
+        $foundTypes = $TypeTokens |
+            Sort-Object @{expression = {$_.text.ToUpper()}} -unique |
             Select-Object -ExpandProperty Text | ForEach-Object { "[$_]"} | Out-String
     }
     else {
@@ -171,7 +168,7 @@ $foundTypes
 WARNING
 These are potentially dangerous commands.
 
-$dangercommands
+$DangerCommands
 "@
 
     #endregion

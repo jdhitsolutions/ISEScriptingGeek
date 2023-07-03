@@ -1,17 +1,16 @@
-﻿
-#cycle through PowerShell Tabs
-#this needs to be in your PowerShell ISE profile to work properly
+#cycle through PowerShell ISE Tabs
+
 
 Function Get-NextISETab {
-    [cmdletbinding()]
+    [CmdletBinding()]
     Param()
 
     $iseTabs = $psISE.PowerShellTabs
 
     #get current tab
     for ($i = 0; $i -le $iseTabs.count - 1; $i++) {
-        Write-Verbose $iseTabs[$i].Displayname
-        if ($iseTabs[$i].Displayname -eq $psISE.CurrentPowerShellTab.DisplayName) {
+        Write-Verbose $iseTabs[$i].DisplayName
+        if ($iseTabs[$i].DisplayName -eq $psISE.CurrentPowerShellTab.DisplayName) {
             $current = $i
         }
     }

@@ -1,7 +1,7 @@
 ---
 external help file: ISEScriptingGeek-help.xml
 Module Name: ISEScriptingGeek
-online version:
+online version: https://bit.ly/434MYF7
 schema: 2.0.0
 ---
 

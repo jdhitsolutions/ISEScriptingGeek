@@ -1,18 +1,16 @@
-
-
 Function Get-SearchResult {
-    [cmdletbinding()]
+    [CmdletBinding()]
     Param(
         [Parameter(Position = 0)]
-        [ValidateNotNullorEmpty()]
-        [string]$Text = $psise.currentfile.editor.selectedText,
+        [ValidateNotNullOrEmpty()]
+        [String]$Text = $psISE.CurrentFile.editor.selectedText,
         [ValidateSet("Bing", "Google", "Yahoo")]
-        [string]$SearchEngine = "Google"
+        [String]$SearchEngine = "Google"
     )
 
     Switch ($SearchEngine) {
         "Bing" {
-            $lang = (get-culture).parent.name
+            $lang = (Get-Culture).parent.name
             $url = "http://www.bing.com/search?q=$text+language%3A$lang"
             Break
         }
@@ -25,8 +23,8 @@ Function Get-SearchResult {
     } #switch
 
 
-    write-Verbose "Opening $url in $SearchEngine"
+    Write-Verbose "Opening $url in $SearchEngine"
 
-    Start $url
+    Start-Process $url
 
 } #end function

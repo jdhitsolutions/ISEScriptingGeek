@@ -1,18 +1,16 @@
-
-
 Function ConvertFrom-Alias {
-
+    [CmdletBinding()]
     Param (
         [Parameter(Position = 0)]
-        [ValidateNotNullorEmpty()]
+        [ValidateNotNullOrEmpty()]
         $Text = $psISE.CurrentFile.Editor.text
     )
 
     #make sure we are using the ISE
-    if ($host.name -match "ISE") {
+    if ($host.name -match 'ISE') {
 
         #Turn the script into syntax tokens
-        Write-Verbose "Tokenizing"
+        Write-Verbose 'Tokenizing'
 
         #verify there are no syntax errors first by Tokenizing the script
         $out = $null
@@ -23,21 +21,21 @@ Function ConvertFrom-Alias {
             #enumerate each parsing error in $out
             foreach ($problem in $out) {
                 Write-Warning $problem.message
-                Write-Warning "Line: $($problem.Token.Startline) at character: $($problem.token.StartColumn)"
+                Write-Warning "Line: $($problem.Token.StartLine) at character: $($problem.token.StartColumn)"
             }
         }
         else {
             #if no errors then proceed to convert
-            $tokens | Where-Object { $_.Type -eq 'Command'} |
-                Sort-Object StartLine, StartColumn -Descending |
-                ForEach-Object {
+            $tokens | Where-Object { $_.Type -eq 'Command' } |
+            Sort-Object StartLine, StartColumn -Descending |
+            ForEach-Object {
                 #handle the ? by escaping it
                 if ($_.content -eq '?') {
-                    Write-Verbose "Found a ?"
-                    $result = Get-Command -name '`?' -CommandType Alias
+                    Write-Verbose 'Found a ?'
+                    $result = Get-Command -Name '`?' -CommandType Alias
                 }
                 else {
-                    $result = Get-Command -name $_.Content -CommandType Alias -ErrorAction SilentlyContinue
+                    $result = Get-Command -Name $_.Content -CommandType Alias -ErrorAction SilentlyContinue
                 }
 
                 #check and see if Get-Command returned anything
@@ -51,9 +49,9 @@ Function ConvertFrom-Alias {
         } #else $tokens exists and there were no parsing errors
     } #if ISE
     else {
-        Write-Warning "You must be using the PowerShell ISE"
+        Write-Warning 'You must be using the PowerShell ISE'
     }
 
-    Write-Verbose "Finished"
+    Write-Verbose 'Finished'
 
 } #end Function

@@ -2,9 +2,9 @@
 
 [![PSGallery Version](https://img.shields.io/powershellgallery/v/ISEScriptingGeek.png?style=for-the-badge&logo=powershell&label=PowerShell%20Gallery)](https://www.powershellgallery.com/packages/ISEScriptingGeek/) [![PSGallery Downloads](https://img.shields.io/powershellgallery/dt/ISEScriptingGeek.png?style=for-the-badge&label=Downloads)](https://www.powershellgallery.com/packages/ISEScriptingGeek/)
 
-This module is a set of ISE add-ons and a few themes. It requires PowerShell5.1 or higher.
+This module is a set of PowerShell ISE add-ons and a few themes. It requires PowerShell 5.1.
 
-_As of February 2019 I no longer intend to update or extend this module. VS Code is clearly Microsoft's choice for a scripting tool going forward. The PowerShell ISE isn't going away any time soon, but it is also no longer under active development so I need no point in continuing to develop this module. I will maintain it and address pull requests should members of the community wish to contribute, maintain or extend this module._
+_As of February 2019, I no longer intend to update or extend this module. VS Code is Microsoft's choice for a scripting editor going forward. The PowerShell ISE isn't going away any time soon, but it is also no longer under active development so I need no point in continuing to develop this module. I will maintain it and address pull requests should members of the community wish to contribute, maintain or extend this module._
 
 Install the module from the PowerShell Gallery.
 
@@ -18,7 +18,7 @@ Then in your PowerShell_ISE profile script, import the module.
 Import-Module ISEScriptingGeek
 ```
 
-This will add the menu short cuts.
+This will add shortcuts to the Add-Ons menu.
 
 ## Themes
 
@@ -38,19 +38,21 @@ A set of functions for creating and working with "bookmarks" to files opened in 
 
 ### Convert
 
-These handle various conversions such as:
+The module will add shortcuts to code that will perform conversions on the file or selected text.
 
-- selected text to snippet, region
-- case conversion
-- alias expansion
+![Convert menu](images/convert-menu.png)
 
 ### Dates and times
 
-A set of functions for inserting date/time in different formats
+A set of functions for inserting date/time in different formats.
+
+![DateTime menu](images/datetime-menu.png)
 
 ### Files
 
 A set of functions for working with open files and their associated folders
+
+![Files menu](images/files-menu.png)
 
 ### Work
 
@@ -60,9 +62,15 @@ A set of functions for creating and managing a "work list" of files
 
 There are also other scripts directly off the **ISE Scripting Geek** menu, these functions provide various capabilities:
 
-- Print, Run or Sign script
-- Send script to Word (with or without color)
+- Print, Run, or Sign a script
+- Send the script to Word (with or without color)
 - Send selected text to different search engines
 - Help functions
 - New CIM Command, DSC Resource snippets, etc.
 
+## Other Modules of Interest
+
+You might also be interested in these modules:
+
+- [ISERemoteTab](https://github.com/jdhitsolutions/New-ISERemoteTab)
+- [PSScriptTools](https://github.com/jdhitsolutions/PSScriptTools)

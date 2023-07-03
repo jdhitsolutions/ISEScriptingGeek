@@ -1,22 +1,20 @@
-
-
 # Comments:
 #This works best in the ISE with your function already loaded.
 
 Function New-CommentHelp {
-    [cmdletbinding()]
+    [CmdletBinding()]
     Param(
         [Parameter(Position = 0, Mandatory, HelpMessage = "What is the name of your function or command?" )]
-        [ValidateNotNullorEmpty()]
-        [string]$Name,
+        [ValidateNotNullOrEmpty()]
+        [String]$Name,
 
         [Parameter(Position = 1, Mandatory, HelpMessage = "Enter a brief synopsis" )]
-        [ValidateNotNullorEmpty()]
-        [string]$Synopsis,
+        [ValidateNotNullOrEmpty()]
+        [String]$Synopsis,
 
         [Parameter(Position = 2, Mandatory, HelpMessage = "Enter a description. You can expand and edit later" )]
-        [ValidateNotNullorEmpty()]
-        [string]$Description
+        [ValidateNotNullOrEmpty()]
+        [String]$Description
     )
 
     #define beginning of comment based string
@@ -36,26 +34,26 @@ Function New-CommentHelp {
 
     #test if command is loaded and if so get parameters
     #ignore common:
-    $common = "VERBOSE|DEBUG|ERRORACTION|WARNINGACTION|ERRORVARIABLE|WARNINGVARIABLE|OUTVARIABLE|OUTBUFFER|PIPELINEVARIABLE|WHATIF|CONFIRM|INFORMATIONVARIABLE|INFORMATIONACTION"
+    $common = "VERBOSE|DEBUG|ERRORACTION|WARNINGACTION|ERRORVARIABLE|WARNINGVARIABLE|OUTVARIABLE|OUTBUFFER|PIPELINEVARIABLE|WhatIf|CONFIRM|INFORMATIONVARIABLE|INFORMATIONACTION"
     Try {
         $command = Get-Command -Name $name -ErrorAction Stop
         $params = $command.parameters.keys | Where-Object {$_ -notmatch $common}
     }
     Catch {
         #otherwise prompt
-        $scriptname = Read-Host "If your command is a script file, enter the full file name with extension. Otherwise leave blank"
-        if ($scriptname) {
+        $ScriptName = Read-Host "If your command is a script file, enter the full file name with extension. Otherwise leave blank"
+        if ($ScriptName) {
             Try {
-                $command = Get-Command -Name $scriptname -ErrorAction Stop
+                $command = Get-Command -Name $ScriptName -ErrorAction Stop
                 $params = $command.parameters.keys | Where-Object {$_ -notmatch $common}
             }
             Catch {
-                Write-Warning "Failed to find $scriptname"
+                Write-Warning "Failed to find $ScriptName"
                 #BAIL OUT
                 Return
             }
 
-        } #if $scriptname
+        } #if $ScriptName
         else {
             #prompt for a comma separated list of parameter names
             $EnterParams = Read-Host "Enter a comma separated list of parameter names"
@@ -72,7 +70,7 @@ Function New-CommentHelp {
             $pa = $command.parameters[$param].Attributes  | Where-Object {$_.GetType().name -eq "ParameterAttribute"}
             #extract any parameter help messages
             if ($pa.HelpMessage) {
-                [string]$paramDesc = $pa.HelpMessage
+                [String]$paramDesc = $pa.HelpMessage
             }
             if ($aliases) {
                 $paramDesc += " This command has aliases of: $($aliases -join ",")"
@@ -116,7 +114,7 @@ LAST UPDATED:  {2}
 AUTHOR      :  {3}\{4}
 
 Learn more about PowerShell:
-http://jdhitsolutions.com/blog/essential-powershell-resources/
+http://jdhitsolutions.com/blog/essential-PowerShell-resources/
 
   ****************************************************************
   * DO NOT USE IN A PRODUCTION ENVIRONMENT UNTIL YOU HAVE TESTED *
@@ -164,8 +162,8 @@ http://jdhitsolutions.com/blog/essential-powershell-resources/
     $help += "#>"
 
     #if ISE insert into current file
-    if ($psise) {
-        $psise.CurrentFile.Editor.InsertText($help) | Out-Null
+    if ($psISE) {
+        $psISE.CurrentFile.Editor.InsertText($help) | Out-Null
     }
     else {
         #else write to the pipeline

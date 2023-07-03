@@ -2,24 +2,23 @@
 #parse a script file for comments only
 
 Function Get-ScriptComments {
-
-    [cmdletbinding()]
+    [CmdletBinding()]
     Param(
-        [Parameter(Position = 0, Mandatory, HelpMessage = "Enter the path of a PS1 file",
+        [Parameter(Position = 0, Mandatory, HelpMessage = 'Enter the path of a PS1 file',
             ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [Alias("PSPath", "Name")]
-        [ValidateScript( {Test-Path $_})]
-        [ValidatePattern("\.ps(1|m1)$")]
-        [string]$Path
+        [Alias('PSPath', 'Name')]
+        [ValidateScript( { Test-Path $_ })]
+        [ValidatePattern('\.ps(1|m1)$')]
+        [String]$Path
     )
 
     Begin {
         #Begin scriptblock
-        Write-Verbose -Message "Starting $($MyInvocation.Mycommand)"
+        Write-Verbose -Message "Starting $($MyInvocation.MyCommand)"
         #initialization commands
         #explicitly define some AST variables
-        New-Variable astTokens -force
-        New-Variable astErr -force
+        New-Variable $AstTokens -Force
+        New-Variable astErr -Force
     } #close begin
 
     Process {
@@ -29,18 +28,15 @@ Function Get-ScriptComments {
 
         Write-Verbose -Message "Parsing $Path"
         #Parse the file
-        $ast = [System.Management.Automation.Language.Parser]::ParseFile($Path, [ref]$astTokens, [ref]$astErr)
+        $AST = [System.Management.Automation.Language.Parser]::ParseFile($Path, [ref]$AstTokens, [ref]$astErr)
 
         #filter tokens for comments and display text
-        $asttokens.where( {$_.kind -eq 'comment'}) |
-            Select-Object -ExpandProperty Text
+        $AstTokens.where( { $_.kind -eq 'comment' }) |
+        Select-Object -ExpandProperty Text
     } #close process
 
     End {
-        #end scriptblock
-
-        #ending the function
-        Write-Verbose -Message "Ending $($MyInvocation.Mycommand)"
+        Write-Verbose -Message "Ending $($MyInvocation.MyCommand)"
     } #close end
 
 } #close function

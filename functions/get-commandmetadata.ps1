@@ -1,15 +1,18 @@
-﻿
+
 
 Function Get-CommandMetadata {
-
-    [cmdletbinding()]
-    [alias("gcmd")]
+    [CmdletBinding()]
+    [alias('gcmd')]
     Param(
-        [Parameter(Position = 0, Mandatory, HelpMessage = "Enter the name of a PowerShell command")]
-        [ValidateNotNullorEmpty()]
-        [string]$Command,
-        [string]$NewName,
-        [switch]$NoHelp
+        [Parameter(
+            Position = 0,
+            Mandatory,
+            HelpMessage = 'Enter the name of a PowerShell command'
+        )]
+        [ValidateNotNullOrEmpty()]
+        [String]$Command,
+        [String]$NewName,
+        [Switch]$NoHelp
     )
 
     Try {
@@ -17,12 +20,12 @@ Function Get-CommandMetadata {
         $gcm = Get-Command -Name $command -ErrorAction Stop
         #allow an alias or command name
         if ($gcm.CommandType -eq 'Alias') {
-            $cmdName = $gcm.ResolvedCommandName
+            $CmdName = $gcm.ResolvedCommandName
         }
         else {
-            $cmdName = $gcm.Name
+            $CmdName = $gcm.Name
         }
-        Write-Verbose "Resolved to $cmdName"
+        Write-Verbose "Resolved to $CmdName"
         $cmd = New-Object System.Management.Automation.CommandMetaData ($gcm)
     }
     Catch {
@@ -44,7 +47,7 @@ Function Get-CommandMetadata {
             #remove help link
             $cmd.HelpUri = $Null
 
-            Write-Verbose "Defining a new comment based help block"
+            Write-Verbose 'Defining a new comment based help block'
             #define outline for comment based help
             $myHelp = @"
 
@@ -53,30 +56,30 @@ PUT SYNTAX HERE
 .Description
 PUT DESCRIPTION HERE
 .Notes
-Created:`t$(Get-Date -format d)
+Created:`t$(Get-Date -Format d)
 
 .Example
 PS C:\> $Name
 
 .Link
-$cmdname
+$CmdName
 
 "@
-            Write-Verbose "Creating proxy command with help"
+            Write-Verbose 'Creating proxy command with help'
             $metadata = [System.Management.Automation.ProxyCommand]::Create($cmd, $myHelp)
 
-        } #nohelp
+        } #noHelp
         else {
-            Write-Verbose "Creating proxy command"
+            Write-Verbose 'Creating proxy command'
             $metadata = [System.Management.Automation.ProxyCommand]::Create($cmd)
         }
 
-        Write-Verbose "Cleaning up parameter names"
-        [regex]$rx = "[\s+]\$\{\w+\}[,|)]"
+        Write-Verbose 'Cleaning up parameter names'
+        [regex]$rx = '[\s+]\$\{\w+\}[,|)]'
         $metadata = $metadata.split("`n") | ForEach-Object {
-            If ($rx.ismatch($_)) {
+            If ($rx.IsMatch($_)) {
                 #strip off { } around parameter names
-                $rx.Match($_).Value.Replace("{", "").Replace("}", "")
+                $rx.Match($_).Value.Replace('{', '').Replace('}', '')
                 # "`n"
             }
             else {
@@ -87,7 +90,7 @@ $cmdname
 
         #define the text for the new command
         $text = @"
-#requires -version $($PSVersionTable.psversion)
+#requires -version $($PSVersionTable.PSVersion)
 
 Function $Name {
 
@@ -95,11 +98,11 @@ $metadata
 
 } #end function $Name
 "@
-        if ($host.Name -match "PowerShell ISE") {
+        if ($host.Name -match 'PowerShell ISE') {
             #open in a new ISE tab
-            $tab = $psise.CurrentPowerShellTab.Files.Add()
+            $tab = $psISE.CurrentPowerShellTab.Files.Add()
 
-            Write-Verbose "Opening metadata in a new ISE tab"
+            Write-Verbose 'Opening metadata in a new ISE tab'
             $tab.editor.InsertText($Text)
 
             #jump to the top

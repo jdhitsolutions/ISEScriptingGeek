@@ -1,32 +1,32 @@
 ---
 external help file: ISEScriptingGeek-help.xml
 Module Name: ISEScriptingGeek
-online version:
+online version: https://bit.ly/43bAgo3
 schema: 2.0.0
 ---
 
-# New-Inputbox
+# New-InputBox
 
 ## SYNOPSIS
 
-Display a Visual Basic style inputbox.
+Display a Visual Basic style InputBox.
 
 ## SYNTAX
 
 ```yaml
-New-Inputbox [-Prompt] <String> [[-Title] <String>] [[-Default] <String>] [<CommonParameters>]
+New-InputBox [-Prompt] <String> [[-Title] <String>] [[-Default] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-This function will display a graphical Inputbox, like the one from VisualBasic and VBScript. You must specify a messag prompt. You can specify a title, the default is "Input". You can also specify a default value. The inputbox will write  whatever is entered into it to the pipeline. If you click Cancel the inputbox will still write a string to the pipeline with a length of 0. It is recommended that you validate input.
+This function will display a graphical InputBox, like the one from VisualBasic and VBScript. You must specify a messag prompt. You can specify a title, the default is "Input". You can also specify a default value. The InputBox will write  whatever is entered into it to the pipeline. If you click Cancel the InputBox will still write a string to the pipeline with a length of 0. It is recommended that you validate input.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 
 ```powershell
-PS C:\> $c = New-Inputbox -prompt "Enter the Netbios name of a domain computer." -title "Enter a computername" -default $env:computername
+PS C:\> $c = New-InputBox -prompt "Enter the Netbios name of a domain computer." -title "Enter a computername" -default $env:computername
 PS C:\> get-service -computer $c
 ```
 

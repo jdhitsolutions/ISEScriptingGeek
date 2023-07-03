@@ -1,16 +1,14 @@
-﻿
-#this is an ISE only function
 #copy selected ISE text to Microsoft Word
 
 Function Copy-ToWord {
-    [cmdletbinding()]
+    [CmdletBinding()]
     Param(
         [ValidatePattern("\S+")]
-        [string[]]$Text = $psise.CurrentFile.Editor.SelectedText,
-        [switch]$Colorized
+        [string[]]$Text = $psISE.CurrentFile.Editor.SelectedText,
+        [Switch]$Colorized
     )
 
-    If (($global:word.Application -eq $Null) -OR -NOT (Get-Process WinWord)) {
+    If (($null -eq $global:word.Application) -OR -NOT (Get-Process WinWord)) {
         #remove any variables that might be left over just to be safe
         Remove-Variable -Name doc, selection -Force -ErrorAction SilentlyContinue
 

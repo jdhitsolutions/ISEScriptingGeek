@@ -1,11 +1,11 @@
 ---
 external help file: ISEScriptingGeek-help.xml
 Module Name: ISEScriptingGeek
-online version:
+online version: https://bit.ly/3CYzPmk
 schema: 2.0.0
 ---
 
-# Convert-CommandtoHash
+# Convert-CommandToHash
 
 ## SYNOPSIS
 
@@ -14,7 +14,7 @@ Convert a command to a hashtable
 ## SYNTAX
 
 ```yaml
-Convert-CommandtoHash [[-Text] <String>] [<CommonParameters>]
+Convert-CommandToHash [[-Text] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

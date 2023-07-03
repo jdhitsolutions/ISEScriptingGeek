@@ -1,11 +1,11 @@
 ---
 external help file: ISEScriptingGeek-help.xml
 Module Name: ISEScriptingGeek
-online version:
+online version: https://bit.ly/3JJq4MC
 schema: 2.0.0
 ---
 
-# Convert-CodetoSnippet
+# Convert-CodeToSnippet
 
 ## SYNOPSIS
 
@@ -14,7 +14,7 @@ Convert selected code to a snippet
 ## SYNTAX
 
 ```yaml
-Convert-CodetoSnippet [-Text] <String> [-WhatIf] [-Confirm] [<CommonParameters>]
+Convert-CodeToSnippet [-Text] <String> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

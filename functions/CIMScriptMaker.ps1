@@ -1,18 +1,18 @@
 
 
 Function New-CIMCommand {
-    Param([string]$computername = $env:COMPUTERNAME)
+    Param([String]$computername = $env:COMPUTERNAME)
 
     Function Get-Namespace {
         #this function will recursively enumerate namespaces
 
         Param(
-            [string]$Namespace = "Root",
+            [String]$Namespace = 'Root',
             [Microsoft.Management.Infrastructure.CimSession]$CimSession
         )
 
-        $nspaces = $cimsession | Get-CimInstance -Namespace $Namespace -ClassName __Namespace
-        foreach ($nspace in $nspaces) {
+        $nSpaces = $CimSession | Get-CimInstance -Namespace $Namespace -ClassName __Namespace
+        foreach ($nSpace in $nSpaces) {
 
             $child = Join-Path -Path $Namespace -ChildPath $nspace.Name
             $child
@@ -20,45 +20,45 @@ Function New-CIMCommand {
         }
     }
 
-    #create a CIMSession
-    $cimsess = New-CimSession -ComputerName $computername
+    #create a CimSession
+    $cimSess = New-CimSession -ComputerName $computername
 
     #browse namespaces
-    Write-Host "Enumerating namspaces on $computername....please wait..." -ForegroundColor Cyan
+    Write-Host "Enumerating namespaces on $computername....please wait..." -ForegroundColor Cyan
     $ns = Get-Namespace -CimSession $cimsess | Sort-Object |
-        Out-GridView -Title "$($cimsess.Computername): Select a namespace" -OutputMode Single
+    Out-GridView -Title "$($cimsess.Computername): Select a namespace" -OutputMode Single
 
     if ($ns) {
         #get classes filtering out system classes
-        Write-Host "Enumerating classes...please wait..." -ForegroundColor Cyan
+        Write-Host 'Enumerating classes...please wait...' -ForegroundColor Cyan
         $class = $cimsess | Get-CimClass -Namespace $ns |
-            Where-Object {$_.cimclassname -notmatch "^__" -AND $_.CimClassProperties.Name -notcontains "Antecedent"} |
-            Sort-Object CimClassName | Select-Object CimClassName, CimClassProperties |
-            Out-GridView -Title "$NS : Select a class name" -OutputMode Single
+        Where-Object { $_.cimClassName -notmatch '^__' -AND $_.CimClassProperties.Name -notcontains 'Antecedent' } |
+        Sort-Object CimClassName | Select-Object CimClassName, CimClassProperties |
+        Out-GridView -Title "$NS : Select a class name" -OutputMode Single
     }
 
     if ($class) {
 
         #create a VBScript message box
-        $wshell = New-Object -ComObject "Wscript.Shell"
-        $r = $wshell.Popup("Do you want to test this class?", -1, $class.CimClassname, 32 + 4)
+        $wshell = New-Object -ComObject 'Wscript.Shell'
+        $r = $wshell.Popup('Do you want to test this class?', -1, $class.CimClassName, 32 + 4)
 
         if ($r -eq 6) {
             #Yes
             $test = $cimsess | Get-CimInstance -Namespace $ns -ClassName $class.CimClassName
             if ($test) {
                 $test | Out-GridView -Title "$NS\$($Class.cimClassName)" -Wait
-                $prompt = "Do you want to continue?"
+                $prompt = 'Do you want to continue?'
                 $icon = 32 + 4
             }
             else {
-                $prompt = "No results were returned. Do you want to continue?"
+                $prompt = 'No results were returned. Do you want to continue?'
                 $icon = 16 + 4
             }
 
-            $r = $wshell.Popup($prompt, -1, $class.CimClassname, $icon)
+            $r = $wshell.Popup($prompt, -1, $class.CimClassName, $icon)
             if ($r -eq 7) {
-                Write-Host "Exiting. Please try again later." -ForegroundColor Yellow
+                Write-Host 'Exiting. Please try again later.' -ForegroundColor Yellow
                 #bail out
                 Return
             }
@@ -66,34 +66,34 @@ Function New-CIMCommand {
         } #if r = 6
 
         #define basic command
-        $cmd = "Get-CimInstance @cimParam"
+        $cmd = 'Get-CimInstance @cimParam'
 
         #create a filter
-        $filterProperty = $class.CimClassProperties | Select-Object Name, CimType, Flags |
-            Out-GridView -Title "Select a property to filter on or cancel to not filter." -OutputMode Single
+        $FilterProperty = $class.CimClassProperties | Select-Object Name, CimType, Flags |
+        Out-GridView -Title 'Select a property to filter on or cancel to not filter.' -OutputMode Single
 
-        if ($filterProperty) {
-            $operator = "=", "<", ">", "<>", ">=", "<=", "like" |
-                Out-GridView -Title "Select an operator. Default if you cancel is =" -OutputMode Single
+        if ($FilterProperty) {
+            $operator = '=', '<', '>', '<>', '>=', '<=', 'like' |
+            Out-GridView -Title 'Select an operator. Default if you cancel is =' -OutputMode Single
 
-            #create a VBSCript inputbox
-            Add-Type -AssemblyName "microsoft.visualbasic" -ErrorAction Stop
+            #create a VBScript InputBox
+            Add-Type -AssemblyName 'Microsoft.VisualBasic' -ErrorAction Stop
             $Prompt = "Enter a value for your filter. If using a string, wrap the value in ''. If using Like, use % as the wildcard character."
-            $title = "-filter ""$($filterproperty.Name) $operator ?"""
-            $value = [microsoft.visualbasic.interaction]::InputBox($Prompt, $Title)
+            $title = "-filter ""$($FilterProperty.Name) $operator ?"""
+            $value = [Microsoft.VisualBasic.interaction]::InputBox($Prompt, $Title)
 
-            $filter = "-filter ""$($filterproperty.Name) $operator $value"""
+            $filter = "-filter ""$($FilterProperty.Name) $operator $value"""
 
             $cmd += " $filter"
-        } #if filterproperty
+        } #if FilterProperty
 
         #show properties
-        Write-Host "Getting class properties" -ForegroundColor Cyan
+        Write-Host 'Getting class properties' -ForegroundColor Cyan
         $properties = $class.CimClassProperties | Select-Object Name, CimType, Flags |
-            Out-Gridview -Title "$($class.CimClassName) : Select one or more properties. Cancel will select *" -PassThru
+        Out-GridView -Title "$($class.CimClassName) : Select one or more properties. Cancel will select *" -PassThru
 
         if ($properties) {
-            $select = $properties.name -join ","
+            $select = $properties.name -join ','
             $cmd += @"
  |
     Select-Object -property $select,PSComputername
@@ -104,7 +104,7 @@ Function New-CIMCommand {
 
     #define a name for the function using the class name
     #remove _ from class name
-    $cname = $class.CimClassName.Replace("_", "")
+    $cname = $class.CimClassName.Replace('_', '')
     $cmdName = "Get-$cname"
 
     #the auto-generated PowerShell code
@@ -129,9 +129,9 @@ PS C:\> $cmdName
 
 Run the command defaulting to the local computername.
 .Example
-PS C:\> Get-CimSession | $cmdName | Out-Gridview -title $cmdName
+PS C:\> Get-CimSession | $cmdName | Out-GridView -title $cmdName
 
-Get all CIMSessions and pipe them to this command sending results to Out-Gridview.
+Get all CimSessions and pipe them to this command sending results to Out-GridView.
 .Notes
 Version     : 1.0
 Author      : $($env:userdomain)\$($env:username)
@@ -145,11 +145,11 @@ Get-CimInstance
 Get-CimSession
 #>
 
-[cmdletbinding(DefaultParameterSetName="Computer")]
+[CmdletBinding(DefaultParameterSetName="Computer")]
 Param(
-[Parameter(Position=0,ValueFromPipelinebyPropertyName=`$True,
+[Parameter(Position=0,ValueFromPipelineByPropertyName=`$True,
 ParameterSetName="Computer")]
-[ValidateNotNullorEmpty()]
+[ValidateNotNullOrEmpty()]
 [Alias("CN","Host")]
 [string[]]`$Computername=`$env:Computername,
 
@@ -160,36 +160,36 @@ ParameterSetName="Session")]
 )
 
 Begin {
- Write-Verbose "Starting command `$(`$MyInvocation.Mycommand)"
- #create a hashtable of parameters to splat against Get-CimInstance
- `$cimParam=@{
- Namespace = "$NS"
- ClassName = "$($Class.CimClassName) "
- ErrorAction = "Stop"
- }
+    Write-Verbose "Starting command `$(`$MyInvocation.MyCommand)"
+    #create a hashtable of parameters to splat against Get-CimInstance
+    `$cimParam=@{
+    Namespace = "$NS"
+    ClassName = "$($Class.CimClassName) "
+    ErrorAction = "Stop"
+    }
 } #begin
 
 Process {
- if (`$computername) {
-   `$cimParam.Computername=`$computername
-   Write-Verbose "Processing `$Computername"
- }
- else {
-   #must be a cimsession
-   `$cimParam.CIMSession=`$CimSession
-   Write-Verbose "Processing `$(`$CimSession.ComputerName)"
- }
+    if (`$computername) {
+    `$cimParam.Computername=`$computername
+    Write-Verbose "Processing `$Computername"
+    }
+    else {
+    #must be a CimSession
+    `$cimParam.CimSession=`$CimSession
+    Write-Verbose "Processing `$(`$CimSession.ComputerName)"
+    }
 
- Try {
-    $cmd
- } #try
- Catch {
-    Write-Warning "Failed to retrieve information. `$(`$_.Exception.Message)"
- } #catch
+    Try {
+        $cmd
+    } #try
+    Catch {
+        Write-Warning "Failed to retrieve information. `$(`$_.Exception.Message)"
+    } #catch
 } #Process
 
 End {
- Write-Verbose "Ending command `$(`$MyInvocation.Mycommand)"
+    Write-Verbose "Ending command `$(`$MyInvocation.MyCommand)"
 } #end
 
 } #end function
@@ -197,7 +197,7 @@ End {
 
     $myScript | Out-ISETab
 
-    #remove the cimsession
+    #remove the CimSession
     $cimsess | Remove-CimSession
 
 } #end function

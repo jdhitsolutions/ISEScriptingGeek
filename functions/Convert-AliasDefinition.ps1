@@ -1,26 +1,23 @@
-
-
 Function Convert-AliasDefinition {
-
-    [cmdletBinding(DefaultParameterSetName = "ToDefinition")]
+    [CmdletBinding(DefaultParameterSetName = 'ToDefinition')]
 
     Param(
-        [Parameter(Position = 0, Mandatory = $True, HelpMessage = "Enter a string to convert")]
-        [string]$Text,
-        [Parameter(ParameterSetName = "ToAlias")]
-        [switch]$ToAlias,
-        [Parameter(ParameterSetName = "ToDefinition")]
-        [switch]$ToDefinition
+        [Parameter(Position = 0, Mandatory, HelpMessage = 'Enter a string to convert')]
+        [String]$Text,
+        [Parameter(ParameterSetName = 'ToAlias')]
+        [Switch]$ToAlias,
+        [Parameter(ParameterSetName = 'ToDefinition')]
+        [Switch]$ToDefinition
     )
 
     #make sure we are using the ISE
-    if ($host.name -match "ISE") {
+    if ($host.name -match 'ISE') {
         Try {
             #get alias if it exists otherwise throw an exception that
             #will be caught
             if ($ToAlias) {
                 #get alias by definition and convert to name
-                $alias = get-alias -definition $Text -ErrorAction Stop
+                $alias = Get-Alias -Definition $Text -ErrorAction Stop
                 #there might be multiples so use the first one found
                 if ($alias -is [array]) {
                     $replace = $alias[0].name
@@ -34,11 +31,11 @@ Function Convert-AliasDefinition {
 
                 #if the text is ?, this is a special character so
                 #we'll just assume it is Where-Object
-                if ($Text -eq "?") {
-                    $Replace = "Where-Object"
+                if ($Text -eq '?') {
+                    $Replace = 'Where-Object'
                 }
                 else {
-                    $alias = Get-Alias -name $Text -ErrorAction Stop
+                    $alias = Get-Alias -Name $Text -ErrorAction Stop
                     $replace = $alias.definition
                 }
             } #Else ToDefinition
@@ -51,13 +48,13 @@ Function Convert-AliasDefinition {
 
         #make changes if an alias was found
         If ($replace) {
-            #Insert the replacment
-            $psise.currentfile.editor.insertText($replace)
+            #Insert the replacement
+            $psISE.CurrentFile.editor.insertText($replace)
         }
 
     } #if ISE
     else {
-        Write-Warning "You must be using the PowerShell ISE"
+        Write-Warning 'You must be using the PowerShell ISE'
     }
 
 } #end function

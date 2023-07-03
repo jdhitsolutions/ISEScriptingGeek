@@ -1,14 +1,14 @@
-﻿
+
 
 #close all saved files in the ISE
 
 Function CloseAllFiles {
-    [cmdletbinding()]
+    [CmdletBinding()]
     Param()
 
-    $saved = $psISE.CurrentPowerShellTab.Files.Where( {$_.isSaved})
+    $saved = $psISE.CurrentPowerShellTab.Files.Where( { $_.isSaved })
     foreach ($file in $saved) {
-        write-Verbose "closing $($file.FullPath)"
+        Write-Verbose "closing $($file.FullPath)"
         [void]$psISE.CurrentPowerShellTab.files.Remove($file)
     }
 
@@ -16,13 +16,13 @@ Function CloseAllFiles {
 
 #close all other saved files except for the active file
 Function CloseAllFilesButCurrent {
-    [cmdletbinding()]
+    [CmdletBinding()]
     Param()
 
-    $saved = $psISE.CurrentPowerShellTab.Files.Where( {$_.isSaved -AND $_.fullpath -ne $psISE.CurrentFile.FullPath })
+    $saved = $psISE.CurrentPowerShellTab.Files.Where( { $_.isSaved -AND $_.FullPath -ne $psISE.CurrentFile.FullPath })
     foreach ($file in $saved) {
-        write-Verbose "closing $($file.FullPath)"
-        [void]$psISE.CurrentPowerShellTab.files.Remove($file) 
+        Write-Verbose "closing $($file.FullPath)"
+        [void]$psISE.CurrentPowerShellTab.files.Remove($file)
     }
 
 } #end function

@@ -1,25 +1,23 @@
-﻿Function New-Inputbox {
-
-    [cmdletbinding()]
-
+Function New-InputBox {
+    [CmdletBinding()]
     Param (
-        [Parameter(Position = 0, Mandatory, HelpMessage = "Enter a message prompt")]
-        [ValidateNotNullorEmpty()]
-        [string]$Prompt,
+        [Parameter(Position = 0, Mandatory, HelpMessage = 'Enter a message prompt')]
+        [ValidateNotNullOrEmpty()]
+        [String]$Prompt,
         [Parameter(Position = 1)]
-        [string]$Title = "Input",
+        [String]$Title = 'Input',
         [Parameter(Position = 2)]
-        [string]$Default
+        [String]$Default
 
     )
 
     Try {
-        Add-Type -AssemblyName "microsoft.visualbasic" -ErrorAction Stop
-        [microsoft.visualbasic.interaction]::InputBox($Prompt, $Title, $Default)
+        Add-Type -AssemblyName 'Microsoft.VisualBasic' -ErrorAction Stop
+        [Microsoft.VisualBasic.interaction]::InputBox($Prompt, $Title, $Default)
     }
     Catch {
-        Write-Warning "There was a problem creating the inputbox"
+        Write-Warning 'There was a problem creating the InputBox'
         Write-Warning $_.Exception.Message
     }
 
-} #end New-Inputbox
+} #end New-InputBox

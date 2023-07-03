@@ -1,29 +1,36 @@
-﻿
 #requires -module PSDesiredStateConfiguration
 
 Function New-DSCResourceSnippet {
 
-    [cmdletbinding(SupportsShouldProcess = $True, DefaultParameterSetName = "Name")]
+    [CmdletBinding(SupportsShouldProcess = $True, DefaultParameterSetName = 'Name')]
     Param(
-        [Parameter(Position = 0, Mandatory = $True, HelpMessage = "Enter the name of a DSC resource",
-            ParameterSetName = "Name")]
-        [ValidateNotNullorEmpty()]
+        [Parameter(
+            Position = 0,
+            Mandatory,
+            HelpMessage = 'Enter the name of a DSC resource',
+            ParameterSetName = 'Name'
+        )]
+        [ValidateNotNullOrEmpty()]
         [string[]]$Name,
-        [Parameter(Position = 0, Mandatory = $True, HelpMessage = "Enter the name of a DSC resource",
-            ValueFromPipeline = $True, ParameterSetName = "Resource")]
-        [ValidateNotNullorEmpty()]
+        [Parameter(
+            Position = 0,
+            Mandatory,
+            HelpMessage = 'Enter the name of a DSC resource',
+            ValueFromPipeline,
+            ParameterSetName = 'Resource'
+        )]
+        [ValidateNotNullOrEmpty()]
         [Microsoft.PowerShell.DesiredStateConfiguration.DscResourceInfo[]] $DSCResource,
-        [ValidateNotNullorEmpty()]
-        [string]$Author = $env:username,
-        [Switch]$Passthru
+        [ValidateNotNullOrEmpty()]
+        [String]$Author = $env:username,
+        [Switch]$PassThru
     )
 
     Begin {
-        Write-Verbose -Message "Starting $($MyInvocation.Mycommand)"
+        Write-Verbose -Message "Starting $($MyInvocation.MyCommand)"
     } #begin
 
     Process {
-
         if ($PSCmdlet.ParameterSetName -eq 'Name') {
             #get the resource from the name
             Try {
@@ -44,10 +51,10 @@ Function New-DSCResourceSnippet {
             $entry += "`t#from module $($resource.module.name)"
             $entry += foreach ($item in $resource.Properties) {
                 if ($item.IsMandatory) {
-                    $resourcename = "`t*$($item.name)"
+                    $ResourceName = "`t*$($item.name)"
                 }
                 else {
-                    $resourcename = "`t$($item.name)"
+                    $ResourceName = "`t$($item.name)"
                 }
 
                 if ($item.PropertyType -eq '[bool]') {
@@ -59,7 +66,7 @@ Function New-DSCResourceSnippet {
                 else {
                     $possibleValues = $item.PropertyType
                 }
-                "$resourcename = $($possibleValues)"
+                "$ResourceName = $($possibleValues)"
 
             } #foreach
 
@@ -78,27 +85,27 @@ Function New-DSCResourceSnippet {
                 Text        = ($Entry | Out-String)
                 Author      = $Author
                 Force       = $True
-                ErrorAction = "Stop"
+                ErrorAction = 'Stop'
             }
 
             Write-Verbose ($paramHash | Out-String)
             if ($PSCmdlet.ShouldProcess($Resource.name)) {
 
                 Try {
-                    Write-Debug "Creating snippet file"
+                    Write-Debug 'Creating snippet file'
                     New-IseSnippet @paramHash
 
-                    if ($Passthru) {
+                    if ($PassThru) {
                         #build the path
-                        $snippath = join-path -path "$env:Userprofile\documents\WindowsPowerShell\Snippets" -ChildPath "$title.snippets.ps1xml"
-                        Get-Item -path $snippath
+                        $SnipPath = Join-Path -Path "$env:Userprofile\documents\WindowsPowerShell\Snippets" -ChildPath "$title.snippets.ps1xml"
+                        Get-Item -Path $SnipPath
                     }
                 }
                 Catch {
                     Throw
                 }
 
-            } #if shouldprocess
+            } #if ShouldProcess
         } #foreach resource
 
     } #process
@@ -106,9 +113,9 @@ Function New-DSCResourceSnippet {
     End {
         #import the new snippets into the current session. They will
         #automatically be loaded next time.
-        Write-Verbose "Importing new snippets"
+        Write-Verbose 'Importing new snippets'
         Import-IseSnippet -Path "$env:Userprofile\documents\WindowsPowerShell\Snippets"
-        Write-Verbose -Message "Ending $($MyInvocation.Mycommand)"
+        Write-Verbose -Message "Ending $($MyInvocation.MyCommand)"
     } #end
 
 

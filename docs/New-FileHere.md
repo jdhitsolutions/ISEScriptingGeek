@@ -1,7 +1,7 @@
 ---
 external help file: ISEScriptingGeek-help.xml
 Module Name: ISEScriptingGeek
-online version:
+online version: https://bit.ly/46vYeND
 schema: 2.0.0
 ---
 
@@ -36,7 +36,7 @@ Aliases:
 
 Required: False
 Position: 1
-Default value: (New-Inputbox -Prompt "Enter a file name" -Title "New File" -Default "MyUntitled.ps1")
+Default value: (New-InputBox -Prompt "Enter a file name" -Title "New File" -Default "MyUntitled.ps1")
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

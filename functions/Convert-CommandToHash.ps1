@@ -1,24 +1,24 @@
-﻿
+
 #Convert the named parameter part of a command into a hash table in the ISE
 
-Function Convert-CommandtoHash {
-    [cmdletbinding()]
+Function Convert-CommandToHash {
+    [CmdletBinding()]
     Param(
-        [ValidateNotNullorEmpty()]
-        [string]$Text = $psise.currentfile.editor.SelectedText
+        [ValidateNotNullOrEmpty()]
+        [String]$Text = $psISE.CurrentFile.editor.SelectedText
     )
 
     Set-StrictMode -Version latest
 
-    New-Variable astTokens -force
-    New-Variable astErr -force
+    New-Variable $AstTokens -Force
+    New-Variable astErr -Force
 
-    Write-verbose "Converting $text"
+    Write-Verbose "Converting $text"
 
-    $ast = [System.Management.Automation.Language.Parser]::ParseInput($Text, [ref]$astTokens, [ref]$astErr)
+    $AST = [System.Management.Automation.Language.Parser]::ParseInput($Text, [ref]$AstTokens, [ref]$astErr)
 
     #resolve the command name
-    $cmdType = Get-Command $asttokens[0].text
+    $cmdType = Get-Command $AstTokens[0].text
     if ($cmdType.CommandType -eq 'Alias') {
         $cmd = $cmdType.ResolvedCommandName
     }
@@ -27,41 +27,41 @@ Function Convert-CommandtoHash {
     }
 
     Write-Verbose "Command is $cmd"
-    Write-Verbose ($astTokens | out-string)
+    Write-Verbose ($AstTokens | Out-String)
 
     #last item is end of input token
 
-    $r = for ($i = 1; $i -lt $astTokens.count - 2 ; $i++) {
-        if ($astTokens[$i].ParameterName) {
-            $p = $astTokens[$i].ParameterName
-            write-verbose "Parameter name = $p"
-            write-verbose ($astTokens[$i] | out-string)
-            $v = ""
+    $r = for ($i = 1; $i -lt $AstTokens.count - 2 ; $i++) {
+        if ($AstTokens[$i].ParameterName) {
+            $p = $AstTokens[$i].ParameterName
+            Write-Verbose "Parameter name = $p"
+            Write-Verbose ($AstTokens[$i] | Out-String)
+            $v = ''
             #check next token
-            if ($astTokens[$i + 1].Kind -match 'Parameter|NewLine|EndOfInput') {
+            if ($AstTokens[$i + 1].Kind -match 'Parameter|NewLine|EndOfInput') {
                 #the parameter must be a switch
                 $v = "`$True"
             }
             else {
-                While ($astTokens[$i + 1].Kind -notmatch 'Parameter|NewLine|EndOfInput') {
+                While ($AstTokens[$i + 1].Kind -notmatch 'Parameter|NewLine|EndOfInput') {
                     #break out of loop if there is no text
-                    write-verbose "While: $($astTokens[$i])"
+                    Write-Verbose "While: $($AstTokens[$i])"
                     $i++
                     #test if value is a string and if it is quoted, if not include quotes
-                    if ($astTokens[$i].Text -match "\D" -AND $astTokens[$i].Text -notmatch """\w+.*""" -AND $astTokens[$i].Text -notmatch "'\w+.*'") {
+                    if ($AstTokens[$i].Text -match '\D' -AND $AstTokens[$i].Text -notmatch '"\w+.*"' -AND $AstTokens[$i].Text -notmatch "'\w+.*'") {
                         #ignore commas and variables
-                        if ($astTokens[$i].Kind -match 'Comma|Variable') {
-                            $value = $astTokens[$i].Text
+                        if ($AstTokens[$i].Kind -match 'Comma|Variable') {
+                            $value = $AstTokens[$i].Text
                         }
                         else {
                             #Assume text and quote it
-                            Write-Verbose "Quoting $($astTokens[$i].Text)"
-                            $value = "'$($astTokens[$i].Text)'"
+                            Write-Verbose "Quoting $($AstTokens[$i].Text)"
+                            $value = "'$($AstTokens[$i].Text)'"
                         }
                     }
                     else {
-                        Write-Verbose "Using text as is for $($astTokens[$i].Text)"
-                        $value = $astTokens[$i].Text
+                        Write-Verbose "Using text as is for $($AstTokens[$i].Text)"
+                        $value = $AstTokens[$i].Text
                     }
 
                     Write-Verbose "Adding $Value to `$v"
@@ -75,11 +75,11 @@ Function Convert-CommandtoHash {
 
     } #for
 
-    Write-Verbose "Finished processing AST"
-    Write-verbose ($r | out-string)
+    Write-Verbose 'Finished processing AST'
+    Write-Verbose ($r | Out-String)
 
     #create text
-    $hashtext = @"
+    $HashText = @"
 `$paramHash = @{
  $r}
 
@@ -87,7 +87,7 @@ $cmd @paramHash
 "@
 
     #insert the text which should replace the highlighted line
-    $psise.CurrentFile.Editor.InsertText($hashtext)
+    $psISE.CurrentFile.Editor.InsertText($HashText)
 
 }
 

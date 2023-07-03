@@ -19,7 +19,7 @@ Get-ScriptingHelp
 
 ## DESCRIPTION
 
-Use this command to select about_scripting topics using Out-Gridview.
+Use this command to select about_scripting topics using Out-GridView.
 
 
 ## PARAMETERS

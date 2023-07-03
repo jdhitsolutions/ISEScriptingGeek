@@ -1,14 +1,14 @@
-﻿Function Edit-Snippet {
+Function Edit-Snippet {
     Param(
-        [string]$Path = "$env:userprofile\Documents\WindowsPowerShell\Snippets"
+        [String]$Path = "$env:userprofile\Documents\WindowsPowerShell\Snippets"
     )
 
     #display snippets by name without the .snippet.ps1xml extension
-    $snips = Get-ChildItem $path | Select-Object @{Name = "Name"; Expression = {$_.name.split(".")[0]}} |
-        Out-Gridview -title "Select one or more snippets to edit" -OutputMode Multiple
+    $snips = Get-ChildItem $path | Select-Object @{Name = 'Name'; Expression = { $_.name.split('.')[0] } } |
+    Out-GridView -Title 'Select one or more snippets to edit' -OutputMode Multiple
 
     foreach ($snip in $snips) {
-        $file = join-path -Path $path -ChildPath "$($snip.name).snippets.ps1xml"
+        $file = Join-Path -Path $path -ChildPath "$($snip.name).snippets.ps1xml"
         Open-EditorFile $file
     }
 
